@@ -11,6 +11,11 @@ MidiPlayer::MidiPlayer(Partition *p, MidiOutput *out, QObject *parent) : QObject
     setOutput(out);
 }
 
+MidiPlayer::MidiPlayer(MidiOutput *out, QObject *parent) : QObject(parent)
+{
+    setOutput(out);
+}
+
 void MidiPlayer::setOutput(MidiOutput *out)
 {
     this->midiout = out;

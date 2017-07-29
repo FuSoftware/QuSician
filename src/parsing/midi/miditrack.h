@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include "variablelengthvalue.h"
 
 #include "events/events.h"
 #include "../conversion.h"

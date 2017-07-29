@@ -1,5 +1,12 @@
 #include "midikeyboard.h"
 
+MidiKeyboard::MidiKeyboard(int port, QObject* parent) : QObject(parent)
+{
+    this->port = port;
+    this->worker = 0;
+}
+
+
 MidiKeyboard::MidiKeyboard(int port, int startNote, int endNote, QObject *parent) : QObject(parent)
 {
     this->port = port;

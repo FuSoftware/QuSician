@@ -15,7 +15,8 @@ int main(int argc, char *argv[])
     //w.show();
 
     //TestMidiFile();
-    KeyboardConfTest();
+    //KeyboardConfTest();
+    TestMidiPlayer();
     //PartitionToCSV("D:\\Prog\\MidiMusicXML\\MIDI_sample_synthesia.mid","D:\\Prog\\MidiMusicXML\\MIDI_sample_synthesia.csv",";");
 
     return a.exec();

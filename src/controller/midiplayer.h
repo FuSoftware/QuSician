@@ -18,6 +18,7 @@ class MidiPlayer : public QObject
 public:
     MidiPlayer(Partition *p, QObject *parent = nullptr);
     MidiPlayer(Partition *p, MidiOutput *out, QObject *parent = nullptr);
+    MidiPlayer(MidiOutput *out, QObject *parent = nullptr);
     void setOutput(MidiOutput *out);
     void setPartition(Partition *p);
     void setEvents(QVector<MidiEvent*> events);

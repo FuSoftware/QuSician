@@ -4,6 +4,7 @@
 //https://www.csie.ntu.edu.tw/~r92092/ref/midi/
 //https://www.midi.org/specifications/item/table-1-summary-of-midi-message
 #include <vector>
+#include <string>
 
 enum MidiEventType{
     CHANNEL_PRESSURE = 0,
@@ -33,12 +34,9 @@ public:
     virtual std::vector<unsigned char> getData() = 0;
     int getAbsolute() const;
     int getDelta() const;
-
     int getAbsoluteRt() const;
     int getDeltaRt() const;
-
     bool isMetaEvent() const;
-
     MidiEventType getType() const;
 
 protected:

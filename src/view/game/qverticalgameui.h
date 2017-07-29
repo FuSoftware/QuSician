@@ -9,6 +9,7 @@ class QVerticalGameUi : public QGameUi
 public:
     QVerticalGameUi(QWidget *parent = nullptr);
     void refresh(int t);
+    void setVisibleLength(int measures);
 
 signals:
 
@@ -22,6 +23,7 @@ private:
     void drawNotes(QVector<Note*> notes);
     void drawNote(Note* n);
     void drawKeyboard();
+
 };
 
 #endif // QVERTICALGAMEUI_H

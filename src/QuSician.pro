@@ -63,7 +63,10 @@ SOURCES += \
     view/settings/qmidiconfigurationwidget.cpp \
     communication/midioutworker.cpp \
     communication/midioutput.cpp \
-    controller/midiplayer.cpp
+    controller/midiplayer.cpp \
+    view/game/qhorizontalgameui.cpp \
+    view/game/qtestgameui.cpp \
+    parsing/midi/variablelengthvalue.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -104,7 +107,10 @@ HEADERS += \
     view/settings/qmidiconfigurationwidget.h \
     communication/midioutworker.h \
     communication/midioutput.h \
-    controller/midiplayer.h
+    controller/midiplayer.h \
+    view/game/qhorizontalgameui.h \
+    view/game/qtestgameui.h \
+    parsing/midi/variablelengthvalue.h
 
 #Refer to https://www.music.mcgill.ca/~gary/rtmidi/index.html#compiling
 

@@ -41,3 +41,8 @@ void QVerticalGameUi::drawKeyboard()
 {
 
 }
+
+void QVerticalGameUi::setVisibleLength(int measures)
+{
+
+}

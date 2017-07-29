@@ -70,7 +70,7 @@ vector<MidiPort> RtMidiUtils::getOutputPorts()
         }
 
         MidiPort p;
-        p.id = i+1;
+        p.id = i;
         p.name = portName;
         ports.push_back(p);
     }
@@ -82,6 +82,32 @@ vector<MidiPort> RtMidiUtils::getOutputPorts()
         delete midiout;
 
     return ports;
+}
+
+std::string RtMidiUtils::listInputs()
+{
+    vector<MidiPort> out = getInputPorts();
+    ostringstream oss;
+
+    for(int i=0;i<out.size();i++)
+    {
+        oss << out[i].name << std::endl;
+    }
+
+    return oss.str();
+}
+
+std::string RtMidiUtils::listOutputs()
+{
+    vector<MidiPort> out = getOutputPorts();
+    ostringstream oss;
+
+    for(int i=0;i<out.size();i++)
+    {
+        oss << out[i].name << std::endl;
+    }
+
+    return oss.str();
 }
 
 MidiNote RtMidiUtils::noteToMidi(bool start, Note *n)

@@ -30,7 +30,7 @@ int TimeSignature::getNumerator()
 
 int TimeSignature::getDenominator()
 {
-    return this->denominator;
+    return (1 << this->denominator);
 }
 
 int TimeSignature::getClock()

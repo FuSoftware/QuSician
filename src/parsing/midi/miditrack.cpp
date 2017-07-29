@@ -47,21 +47,22 @@ void MidiTrack::loadEvents(vector<unsigned char> data)
 vector<MidiEvent*> MidiTrack::parseEvents(vector<unsigned char> data)
 {
     vector<MidiEvent*> events;
-    int delta = 0;
+    VLV vlv;
     unsigned int i=0;
 
     while(i<data.size())
     {
         //Delta
-        delta += data[i];
+        vlv.addData(data[i]);
         i++;
 
         if(i>= data.size())
             break;
 
         //MIDI Events
-        if(((data[i] & 0x80) >= 0x80 ) && ((data[i] & 0x80) <= 0xEE))
+        if(((data[i] & 0x80) >= 0x80) && ((data[i] & 0x80) <= 0xEE))
         {
+            int delta = vlv.toInt();
             int status = (data[i] >> 4);
             int n = (data[i] & 0x0F);
 
@@ -159,7 +160,7 @@ vector<MidiEvent*> MidiTrack::parseEvents(vector<unsigned char> data)
                 }
             }
             i++;
-            delta = 0;
+            vlv.clear();
         }
     }
 

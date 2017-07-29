@@ -23,6 +23,10 @@ protected:
     virtual void drawNote(Note* n) = 0;
     virtual void drawKeyboard() = 0;
 
+    virtual int getMaxVisibleDelta() = 0;
+    virtual int getMinVisibleDelta() = 0;
+    virtual void setVisibleLength(int measures) = 0;
+
     int tStart;
     int tStop;
     int tCurrent;

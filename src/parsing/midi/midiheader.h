@@ -15,9 +15,9 @@ class MidiHeader
 {
 public:
     MidiHeader();
-    MidiHeader(vector<char> data);
+    MidiHeader(vector<unsigned char> data);
 
-    void loadData(vector<char> data);
+    void loadData(vector<unsigned char> data);
     string toString();
 
     int getTrackChunks() const;

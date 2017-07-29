@@ -216,6 +216,87 @@ void KeyboardConfTest()
     w->show();
 }
 
+void MidiInOutTest()
+{
+    //Port Selection
+    int portIn;
+    int portOut;
+
+    RtMidiIn *midiin = 0;
+    RtMidiOut *midiout = 0;
+
+    try
+    {
+        midiin = new RtMidiIn();
+    }
+    catch (RtMidiError &error) {
+        // Handle the exception here
+        error.printMessage();
+    }
+    // Check inputs.
+    unsigned int nPorts = midiin->getPortCount();
+    std::cout << "\nThere are " << nPorts << " MIDI input sources available.\n";
+    std::string portName;
+    for ( unsigned int i=0; i<nPorts; i++ ) {
+        try {
+            portName = midiin->getPortName(i);
+        }
+        catch ( RtMidiError &error ) {
+            error.printMessage();
+            goto cleanup;
+        }
+        std::cout << "  Input Port #" << i+1 << ": " << portName << '\n';
+    }
+
+    // RtMidiOut constructor
+    try {
+        midiout = new RtMidiOut();
+    }
+    catch ( RtMidiError &error ) {
+        error.printMessage();
+        exit( EXIT_FAILURE );
+    }
+
+    // Check outputs.
+    nPorts = midiout->getPortCount();
+    std::cout << "\nThere are " << nPorts << " MIDI output ports available.\n";
+    for ( unsigned int i=0; i<nPorts; i++ ) {
+        try {
+            portName = midiout->getPortName(i);
+        }
+        catch (RtMidiError &error) {
+            error.printMessage();
+            goto cleanup;
+        }
+        std::cout << "  Output Port #" << i+1 << ": " << portName << '\n';
+    }
+    std::cout << '\n';
+
+
+
+    // Clean up
+    cleanup:
+        delete midiin;
+        delete midiout;
+
+    std::cout << "Input : ";
+    std::cin >> portIn ;
+
+    std::cout << "Output : ";
+    std::cin >> portOut ;
+
+    QWidget *w = new QWidget();
+
+    MidiOutput *out = new MidiOutput(portOut,w);
+    MidiKeyboard *keyboard = new MidiKeyboard(portIn,w);
+
+    QObject::connect(keyboard,SIGNAL(NoteReleased(MidiNote)),out,SLOT(noteOff(MidiNote)));
+    QObject::connect(keyboard,SIGNAL(NotePressed(MidiNote)),out,SLOT(noteOn(MidiNote)));
+
+    out->start();
+    keyboard->start();
+}
+
 void PartitionToCSV(std::string file, std::string csv, std::string delimiter)
 {
     MidiFile *f = new MidiFile(file);
@@ -236,4 +317,69 @@ void PartitionToCSV(std::string file, std::string csv, std::string delimiter)
     p->toCSV(csv,delimiter);
 
     cout << endl << "CSV file created";
+}
+
+void TestVSV()
+{
+    //81 00
+    VLV v;
+    v.addData(0x81);
+    v.addData(0x00);
+    std::cout << "81 00 -> " << v.toInt() << " (128 / 0x80)" << std::endl;
+
+    //7F
+    v.clear();
+    v.addData(0x7F);
+    std::cout << "7F -> " << v.toInt() << " (127 / 0x7F)" << std::endl;
+
+    //81 7F
+    v.clear();
+    v.addData(0x81);
+    v.addData(0x7F);
+    std::cout << "81 7F -> " << v.toInt() << " (255 / 0xFF)" << std::endl;
+
+    //82 80 00
+    v.clear();
+    v.addData(0x82);
+    v.addData(0x80);
+    v.addData(0x00);
+    std::cout << "82 80 00 -> " << v.toInt() << " (32768 / 0x8000)" << std::endl;
+}
+
+void TestMidiPlayer()
+{
+    std::cout << "Select a MIDI File" << std::endl;
+    QString file = QFileDialog::getOpenFileName(0,QString("Open MIDI File"), QString(), QString("MIDI Files (*.mid)"));
+
+    //Track
+    int trk;
+    MidiFile *f = new MidiFile(file.toStdString());
+    std::cout << std::endl << f->getTracksInfo() << std::endl;
+    std::cout << "Track : ";
+    std::cin >> trk;
+    std::cout << endl;
+
+    //Port
+    int port;
+    // RtMidiOut constructor
+    std::cout << std::endl << "Output ports :" << std::endl;
+    std::cout << RtMidiUtils::listOutputs() << std::endl;
+
+    std::cout << "Output Port : ";
+    std::cin >> port;
+
+    MidiOutput *midiOutput = new MidiOutput(port);
+    MidiPlayer *midiPlayer = new MidiPlayer(midiOutput);
+    MidiTrack *track = f->getTracks()[trk];
+
+    midiPlayer->setEvents(QVector<MidiEvent*>::fromStdVector(track->getEvents()));
+
+    QThread *t = new QThread();
+    QObject::connect(t, SIGNAL(started()),  midiPlayer, SLOT(process()));
+    QObject::connect(midiPlayer, SIGNAL(finished()), t, SLOT(quit()));
+    QObject::connect(midiPlayer, SIGNAL(finished()), midiPlayer, SLOT(deleteLater()));
+    QObject::connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
+    midiPlayer->moveToThread(t);
+    t->start();
+
 }

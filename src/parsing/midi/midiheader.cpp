@@ -5,12 +5,12 @@ MidiHeader::MidiHeader()
 
 }
 
-MidiHeader::MidiHeader(vector<char> data)
+MidiHeader::MidiHeader(vector<unsigned char> data)
 {
     loadData(data);
 }
 
-void MidiHeader::loadData(vector<char> data)
+void MidiHeader::loadData(vector<unsigned char> data)
 {
     //MThd - 4 bytes
     unsigned char MThdBuffer[4];

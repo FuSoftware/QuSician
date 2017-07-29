@@ -11,6 +11,8 @@
 
 #include "view/settings/qmidiconfigurationwidget.h"
 
+#include "parsing/midi/variablelengthvalue.h"
+
 #include <QVector>
 
 void TestMidiFile();
@@ -20,6 +22,10 @@ void TestPortSelection();
 void MidiWorkerTest();
 void PartitionTestMidi();
 void KeyboardConfTest();
+void MidiInOutTest();
 void PartitionToCSV(std::string file, string csv, string delimiter);
+
+void TestVSV();
+void TestMidiPlayer();
 
 #endif // TESTS_H

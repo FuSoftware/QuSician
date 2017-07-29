@@ -5,10 +5,10 @@ FileReader::FileReader()
 
 }
 
-std::vector<char> FileReader::ReadAllBytes(string filename)
+std::vector<unsigned char> FileReader::ReadAllBytes(string filename)
 {
     ifstream is (filename, std::ifstream::binary);
-    vector<char> result;
+    vector<unsigned char> result;
 
     if (is) {
         // get length of file:
@@ -16,7 +16,7 @@ std::vector<char> FileReader::ReadAllBytes(string filename)
         int length = is.tellg();
         is.seekg (0, is.beg);
 
-        char * buffer = new char [length];
+        char *buffer = new char [length];
 
         cout << "Reading " << length << " characters... " << endl;
         // read data as a block:

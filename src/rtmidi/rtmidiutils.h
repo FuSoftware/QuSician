@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 #include "RtMidi.h"
 #include "model/music/note.h"
@@ -30,6 +31,8 @@ public:
     RtMidiUtils();
     static vector<MidiPort> getOutputPorts();
     static vector<MidiPort> getInputPorts();
+    static std::string listInputs();
+    static std::string listOutputs();
     static MidiNote noteToMidi(bool start, Note *n);
     static bool isSharp(int key);
 

@@ -12,8 +12,8 @@ MidiFile::MidiFile(string file)
 
 void MidiFile::loadFile(string file)
 {
-    vector<char> data = FileReader::ReadAllBytes(file);
-    vector<char> headerData(data.begin(), data.begin()+14);
+    vector<unsigned char> data = FileReader::ReadAllBytes(file);
+    vector<unsigned char> headerData(data.begin(), data.begin()+14);
 
     header.loadData(headerData);
 
@@ -57,7 +57,7 @@ string MidiFile::getTracksInfo()
 
     for(unsigned int i=0;i<tracks.size();i++)
     {
-        ss << "Track " << i+1 << endl << tracks[i]->toString() << endl;
+        ss << "Track " << i << endl << tracks[i]->toString() << endl;
     }
 
     return ss.str();
@@ -106,7 +106,7 @@ int MidiFile::getTickTimeUs()
     //http://www.lastrayofhope.co.uk/2009/12/23/midi-delta-time-ticks-to-seconds/
     TimeData d = this->getTimeData();
     int usPerBeat = d.usPerQuarter == 0 ? 500000 : d.usPerQuarter;
-    int tickPerBeat = header.getDivisions() * d.denominator /d.numerator;
+    int tickPerBeat = header.getDivisions() * d.numerator / d.denominator;
     int usPerTick = (usPerBeat / tickPerBeat);
     return usPerTick;
 }

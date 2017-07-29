@@ -13,6 +13,7 @@ class MidiKeyboard : public QObject
 {
     Q_OBJECT
 public:
+    MidiKeyboard(int port, QObject* parent = 0);
     MidiKeyboard(int port, int startNote, int endNote, QObject* parent = 0);
     int getStart();
     int getEnd();
