@@ -34,13 +34,15 @@ void MidiFile::loadFile(string file)
         remainingBytes.erase(remainingBytes.begin(),remainingBytes.begin()+t->getLength());
     }
 
-    //Compute real times
+    //Compute real times and absolute times
     for(int i=0;i<this->tracks.size();i++)
     {
         MidiTrack *t = this->tracks[i];
         for(int j=0;j<t->getEventCount();j++)
         {
             MidiEvent *e = t->getEvents()[j];
+            int prevAbs = j > 0 ? t->getEvents()[j-1]->getAbsolute() : 0;
+            e->generateAbsolute(prevAbs);
             e->generateRealTimes(this->getTickTimeUs());
         }
     }

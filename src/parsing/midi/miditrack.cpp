@@ -35,7 +35,7 @@ void MidiTrack::load(vector<unsigned char> data)
     this->length = Conversion::toInt(lengthBuffer,4);
 
     //Data
-    vector<unsigned char> trackData(data.begin(), data.begin() + this->length);
+    vector<unsigned char> trackData(data.begin() + 8, data.begin() + 8 + this->length);
     loadEvents(trackData);
 }
 

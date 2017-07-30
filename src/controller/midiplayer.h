@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QThread>
 #include <QVector>
+#include <QTime>
 
 #include "model/music/partition.h"
 #include "rtmidi/rtmidiutils.h"
@@ -16,31 +17,40 @@ class MidiPlayer : public QObject
 {
     Q_OBJECT
 public:
-    MidiPlayer(Partition *p, QObject *parent = nullptr);
-    MidiPlayer(Partition *p, MidiOutput *out, QObject *parent = nullptr);
+    MidiPlayer(QVector<MidiEvent*> events, MidiOutput *out = nullptr, QObject *parent = nullptr);
     MidiPlayer(MidiOutput *out, QObject *parent = nullptr);
     void setOutput(MidiOutput *out);
-    void setPartition(Partition *p);
-    void setEvents(QVector<MidiEvent*> events);
+    void addEventList(QVector<MidiEvent*> events);
+
+    void init();
+    void setTime(int ms);
+    int getCurrentTime();
+
+    int getMeanDelta();
 
 signals:
     void finished();
-    void noteOn(MidiNote n);
-    void noteOff(MidiNote n);
-    void noteEvent(MidiNote n);
     void midiEvent(MidiEvent* e);
 
 public slots:
-    void process();
+    void start();
     void stop();
-    void nextEvent();
+    void reset();
+    void update();
 
 private:
-    QQueue<MidiNote> noteEvents;
+    QVector<QVector<MidiEvent*>> events;
     QQueue<MidiEvent*> midiEvents;
 
     bool run;
     MidiOutput *midiout;
+
+    int pauseTime = -1;
+    int last;
+    QTime timer;
+    QTimer *processTimer;
+
+    QQueue<int> deltas;
 };
 
 #endif // MIDIPLAYER_H

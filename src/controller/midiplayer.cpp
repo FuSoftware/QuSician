@@ -1,83 +1,115 @@
 #include "midiplayer.h"
 
-MidiPlayer::MidiPlayer(Partition *p, QObject *parent) : QObject(parent)
+MidiPlayer::MidiPlayer(QVector<MidiEvent *> events , MidiOutput *out, QObject *parent) : QObject(parent)
 {
-    setPartition(p);
-}
-
-MidiPlayer::MidiPlayer(Partition *p, MidiOutput *out, QObject *parent) : QObject(parent)
-{
-    setPartition(p);
+    addEventList(events);
     setOutput(out);
+    init();
 }
 
 MidiPlayer::MidiPlayer(MidiOutput *out, QObject *parent) : QObject(parent)
 {
     setOutput(out);
+    init();
 }
 
 void MidiPlayer::setOutput(MidiOutput *out)
 {
     this->midiout = out;
-    connect(this,SIGNAL(noteOn(MidiNote)),this->midiout,SLOT(noteOn(MidiNote)));
-    connect(this,SIGNAL(noteOff(MidiNote)),this->midiout,SLOT(noteOff(MidiNote)));
     connect(this,SIGNAL(midiEvent(MidiEvent*)),this->midiout,SLOT(midiEvent(MidiEvent*)));
 }
 
-void MidiPlayer::setPartition(Partition *p)
+void MidiPlayer::addEventList(QVector<MidiEvent *> events)
 {
-    vector<Note*> notes = (*p->getNotes());
-    this->noteEvents.clear();
+    this->events.push_back(events);
+}
 
-    for(int i=0;i<notes.size();i++)
+void MidiPlayer::init()
+{
+    for(int i=0;i<100;i++)
     {
-        this->noteEvents.enqueue(RtMidiUtils::noteToMidi(true,notes[i]));
-        this->noteEvents.enqueue(RtMidiUtils::noteToMidi(false,notes[i]));
+        this->deltas.enqueue(0);
     }
-
-    std::sort(this->noteEvents.begin(),this->noteEvents.end(),midiNoteComp);
+    this->processTimer = new QTimer(this);
+    this->processTimer->setSingleShot(true);
+    this->processTimer->setInterval(1);
+    connect(processTimer, SIGNAL(timeout()), this, SLOT(update()));
+    this->last = 0;
 }
 
-void MidiPlayer::setEvents(QVector<MidiEvent *> events)
+void MidiPlayer::start()
 {
-    for(int i=0;i<events.size();i++)
+    if(this->pauseTime >= 0)
     {
-        if(!events[i]->isMetaEvent())
-            this->midiEvents.enqueue(events[i]);
+        setTime(this->pauseTime);
     }
-}
-
-void MidiPlayer::process()
-{
-    QTimer::singleShot(1,Qt::PreciseTimer,this,SLOT(nextEvent()));
-}
-
-void MidiPlayer::nextEvent()
-{
-    /*
-    MidiNote m = this->noteEvents.head();
-    emit noteEvent(m);
-    if(m.state)
-        emit noteOn(m);
     else
-        emit noteOff(m);
+    {
+        this->timer.start();
+    }
 
-    int elapsed = m.stamp;
-    this->noteEvents.dequeue();
+    processTimer->start();
+    this->pauseTime = -1;
+    this->run = true;
+}
 
-    QTimer::singleShot(this->noteEvents.head().stamp - elapsed,Qt::PreciseTimer,this,SLOT(nextEvent()));
+void MidiPlayer::update()
+{
+    int current = this->timer.elapsed();
+    int delta = current - this->last;
 
-    string type = m.state ? std::string("Start") : std::string("Stop ");
-    std::cout << "Event " << type << ", stamp " << m.stamp << " | " << elapsed << " | " << elapsed - m.stamp << endl;
-    */
+    //For each track
+    for(int i=0;i<this->events.size();i++)
+    {
+        for(int j=0;j<this->events[i].size();j++)
+        {
+            MidiEvent *e = this->events[i][j];
 
-    MidiEvent *e = this->midiEvents.dequeue();
-    emit midiEvent(e);
-    QTimer::singleShot(this->midiEvents.head()->getDeltaRt(),Qt::PreciseTimer,this,SLOT(nextEvent()));
+            if(e->getAbsoluteRt() > current)
+                break;
 
+            if(e->getAbsoluteRt() > this->last && e->getAbsoluteRt() <=  current)
+                emit midiEvent(e);
+        }
+    }
+
+    this->deltas.dequeue();
+    this->deltas.enqueue(delta);
+    this->last = current;
+
+    if(this->run)
+        processTimer->start();
 }
 
 void MidiPlayer::stop()
 {
-    run = false;
+    this->pauseTime = this->timer.elapsed();
+    this->run = false;
+}
+
+void MidiPlayer::setTime(int ms)
+{
+    this->timer.restart();
+    this->timer.addMSecs(ms);
+}
+
+void MidiPlayer::reset()
+{
+    this->timer.restart();
+}
+
+int MidiPlayer::getCurrentTime()
+{
+    return this->timer.elapsed();
+}
+
+int MidiPlayer::getMeanDelta()
+{
+    int mean = 0;
+
+    for(int i=0;i<this->deltas.size();i++)
+        mean += this->deltas[i];
+
+    mean /= this->deltas.size();
+    return mean;
 }

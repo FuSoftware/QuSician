@@ -44,18 +44,15 @@ void QMidiConfigurationWidget::testAudio()
     //Partition
     string file = "D:\\Prog\\MidiMusicXML\\A Changeling Can Change - WeimTeam.mid";
     MidiFile *f = new MidiFile(file);
-    this->partition = new Partition(f->getTracks()[1]);
-    this->partition->setTickTime(f->getTickTimeUs());
-
-    this->midiPlayer = new MidiPlayer(this->partition,this->midiOutput);
+    this->midiPlayer = new MidiPlayer(this->midiOutput, this);
 
     //TEST : MidiEvents
     MidiTrack *track = f->getTracks()[1];
-    this->midiPlayer->setEvents(QVector<MidiEvent*>::fromStdVector(track->getEvents()));
+    this->midiPlayer->addEventList(QVector<MidiEvent*>::fromStdVector(track->getEvents()));
 
     QThread *t = new QThread();
 
-    connect(t, SIGNAL(started()),  this->midiPlayer, SLOT(process()));
+    connect(t, SIGNAL(started()),  this->midiPlayer, SLOT(start()));
     connect(this->midiPlayer, SIGNAL(finished()), t, SLOT(quit()));
     connect(this->midiPlayer, SIGNAL(finished()), this->midiPlayer, SLOT(deleteLater()));
     connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));

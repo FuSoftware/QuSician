@@ -352,12 +352,15 @@ void TestMidiPlayer()
     QString file = QFileDialog::getOpenFileName(0,QString("Open MIDI File"), QString(), QString("MIDI Files (*.mid)"));
 
     //Track
-    int trk;
     MidiFile *f = new MidiFile(file.toStdString());
     std::cout << std::endl << f->getTracksInfo() << std::endl;
     std::cout << "Track : ";
-    std::cin >> trk;
-    std::cout << endl;
+
+    //Input a line of numbers
+    std::string s;
+    std::getline( std::cin, s );
+    std::istringstream is( s );
+    std::vector<int> trk( ( std::istream_iterator<int>( is ) ), std::istream_iterator<int>() );
 
     //Port
     int port;
@@ -370,12 +373,15 @@ void TestMidiPlayer()
 
     MidiOutput *midiOutput = new MidiOutput(port);
     MidiPlayer *midiPlayer = new MidiPlayer(midiOutput);
-    MidiTrack *track = f->getTracks()[trk];
 
-    midiPlayer->setEvents(QVector<MidiEvent*>::fromStdVector(track->getEvents()));
+    for(int i=0;i<trk.size();i++)
+    {
+        MidiTrack *track = f->getTracks()[trk[i]];
+        midiPlayer->addEventList(QVector<MidiEvent*>::fromStdVector(track->getEvents()));
+    }
 
     QThread *t = new QThread();
-    QObject::connect(t, SIGNAL(started()),  midiPlayer, SLOT(process()));
+    QObject::connect(t, SIGNAL(started()),  midiPlayer, SLOT(start()));
     QObject::connect(midiPlayer, SIGNAL(finished()), t, SLOT(quit()));
     QObject::connect(midiPlayer, SIGNAL(finished()), midiPlayer, SLOT(deleteLater()));
     QObject::connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));

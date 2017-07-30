@@ -14,7 +14,7 @@ void MidiEvent::generateAbsolute(int previousAbs)
 void MidiEvent::generateRealTimes(int usPerTick)
 {
     this->deltaRt = this->delta * ((float)usPerTick / 1000.0);
-    this->absoluteRt = this->absoluteRt * ((float)usPerTick / 1000.0);
+    this->absoluteRt = this->absolute * ((float)usPerTick / 1000.0);
 }
 
 int MidiEvent::getAbsolute() const
