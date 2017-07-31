@@ -26,6 +26,6 @@ void MidiInOutTest();
 void PartitionToCSV(std::string file, string csv, string delimiter);
 
 void TestVSV();
-void TestMidiPlayer();
+void TestMidiPlayer(string file);
 
 #endif // TESTS_H

@@ -67,7 +67,8 @@ SOURCES += \
     view/game/qhorizontalgameui.cpp \
     view/game/qtestgameui.cpp \
     parsing/midi/variablelengthvalue.cpp \
-    parsing/midi/events/metaevents/keysignature.cpp
+    parsing/midi/events/metaevents/keysignature.cpp \
+    view/menus/qmusiclistwidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -112,7 +113,8 @@ HEADERS += \
     view/game/qhorizontalgameui.h \
     view/game/qtestgameui.h \
     parsing/midi/variablelengthvalue.h \
-    parsing/midi/events/metaevents/keysignature.h
+    parsing/midi/events/metaevents/keysignature.h \
+    view/menus/qmusiclistwidget.h
 
 #Refer to https://www.music.mcgill.ca/~gary/rtmidi/index.html#compiling
 

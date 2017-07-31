@@ -35,9 +35,10 @@ void MidiFile::loadFile(string file)
     }
 
     //Compute absolute times and store SetTempo Events
-    std::vector<MidiEvent*> timing;
+    std::vector<MidiEvent*> tempo;
+    std::vector<MidiEvent*> timeSignature;
 
-    for(int i=0;i<this->tracks.size();i++)
+    for(unsigned int i=0;i<this->tracks.size();i++)
     {
         MidiTrack *t = this->tracks[i];
         for(int j=0;j<t->getEventCount();j++)
@@ -47,13 +48,59 @@ void MidiFile::loadFile(string file)
             e->generateAbsolute(prevAbs);
 
             if(e->getType() == MidiEventType::SET_TEMPO)
-                timing.push_back(e);
-
-            //e->generateRealTimes(this->getTickTimeUs());
+                tempo.push_back(e);
+            else if(e->getType() == MidiEventType::TIME_SIGNATURE)
+                timeSignature.push_back(e);
         }
     }
 
-    std::sort(timing.begin(),timing.end(),midiEventAbsComp);
+    std::sort(timeSignature.begin(),timeSignature.end(),midiEventAbsComp);
+    std::sort(tempo.begin(),tempo.end(),midiEventAbsComp);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+
+    //Compute RT
+    for(unsigned int i=0;i<this->tracks.size();i++)
+    {
+        MidiTrack *t = this->tracks[i];
+
+        int cTs = 0;
+        int cSt = 0;
+        int nTs = cTs+1 >= timeSignature.size() ? -1 : cTs+1;
+        int nSt = cSt+1 >= tempo.size() ? -1 : cSt+1;
+
+        for(int j=0;j<t->getEventCount();j++)
+        {
+            MidiEvent *e = t->getEvents()[j];
+
+            //Time Signature
+            if(nTs>=0)
+            {
+                if(e->getAbsolute() > timeSignature[nTs]->getAbsolute())
+                {
+                    cTs++;
+                    nTs = nTs+1 >= timeSignature.size() ? -1 : nTs+1;
+                }
+            }
+
+            //Set Tempo
+            if(nSt>=0)
+            {
+                if(e->getAbsolute() > tempo[nSt]->getAbsolute())
+                {
+                    cSt++;
+                    nSt = nSt+1 >= timeSignature.size() ? -1 : nSt+1;
+                }
+            }
+
+            e->generateRealTimes(this->getTickTimeUs((SetTempo*)tempo[cSt],(TimeSignature*)timeSignature[cTs]));
+        }
+    }
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto time = end_time - start_time;
+
+    std::cout << "Loaded RT in " << std::chrono::duration_cast<std::chrono::microseconds>(time).count() / 1000 << " ms" << std::endl;
 }
 
 string MidiFile::toString()

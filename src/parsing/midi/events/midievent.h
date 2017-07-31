@@ -51,5 +51,7 @@ protected:
 };
 
 bool midiEventAbsComp(const MidiEvent* a, const MidiEvent* b);
+MidiEvent *getLastEventBefore(std::vector<MidiEvent*> events, int ticks, MidiEventType type);
+int getLastPositionBefore(std::vector<MidiEvent*> events, int ticks, MidiEventType type);
 
 #endif // MIDIEVENT_H

@@ -50,3 +50,39 @@ bool midiEventAbsComp(const MidiEvent* a, const MidiEvent* b)
 {
     return a->getAbsolute() < b->getAbsolute();
 }
+
+MidiEvent *getLastEventBefore(std::vector<MidiEvent*> events, int ticks, MidiEventType type)
+{
+    MidiEvent *e = 0;
+
+    for(int i=0;i<events.size();i++)
+    {
+        MidiEvent *t = events[i];
+
+        if(t->getAbsolute() > ticks)
+            break;
+
+        if(t->getType() == type)
+            e = t;
+    }
+
+    return e;
+}
+
+int getLastPositionBefore(std::vector<MidiEvent*> events, int ticks, MidiEventType type)
+{
+    int res = 0;
+
+    for(int i=0;i<events.size();i++)
+    {
+        MidiEvent *t = events[i];
+
+        if(t->getAbsolute() > ticks)
+            break;
+
+        if(t->getType() == type)
+            res = i;
+    }
+
+    return res;
+}

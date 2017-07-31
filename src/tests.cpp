@@ -344,13 +344,15 @@ void TestVSV()
     std::cout << "82 80 00 -> " << v.toInt() << " (32768 / 0x8000)" << std::endl;
 }
 
-void TestMidiPlayer()
+void TestMidiPlayer(std::string file)
 {
     std::cout << "Select a MIDI File" << std::endl;
-    QString file = QFileDialog::getOpenFileName(0,QString("Open MIDI File"), QString(), QString("MIDI Files (*.mid)"));
+
+    if(file.empty())
+        file = QFileDialog::getOpenFileName(0,QString("Open MIDI File"), QString(), QString("MIDI Files (*.mid)")).toStdString();
 
     //Track
-    MidiFile *f = new MidiFile(file.toStdString());
+    MidiFile *f = new MidiFile(file);
     std::cout << std::endl << f->getTracksInfo() << std::endl;
     std::cout << "Track : ";
 
