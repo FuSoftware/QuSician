@@ -18,5 +18,6 @@
 #include "./metaevents/smpteoffset.h"
 #include "./metaevents/textevent.h"
 #include "./metaevents/timesignature.h"
+#include "./metaevents/keysignature.h"
 
 #endif // EVENTS_H

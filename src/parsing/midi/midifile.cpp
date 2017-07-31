@@ -34,7 +34,9 @@ void MidiFile::loadFile(string file)
         remainingBytes.erase(remainingBytes.begin(),remainingBytes.begin()+t->getLength());
     }
 
-    //Compute real times and absolute times
+    //Compute absolute times and store SetTempo Events
+    std::vector<MidiEvent*> timing;
+
     for(int i=0;i<this->tracks.size();i++)
     {
         MidiTrack *t = this->tracks[i];
@@ -43,9 +45,15 @@ void MidiFile::loadFile(string file)
             MidiEvent *e = t->getEvents()[j];
             int prevAbs = j > 0 ? t->getEvents()[j-1]->getAbsolute() : 0;
             e->generateAbsolute(prevAbs);
-            e->generateRealTimes(this->getTickTimeUs());
+
+            if(e->getType() == MidiEventType::SET_TEMPO)
+                timing.push_back(e);
+
+            //e->generateRealTimes(this->getTickTimeUs());
         }
     }
+
+    std::sort(timing.begin(),timing.end(),midiEventAbsComp);
 }
 
 string MidiFile::toString()
@@ -101,6 +109,14 @@ TimeData MidiFile::getTimeData()
     d.numerator = ts->getNumerator();
     d.thirtySeconds = ts->getThirtySeconds();
     return d;
+}
+
+int MidiFile::getTickTimeUs(SetTempo* st, TimeSignature* ts)
+{
+    int usPerBeat = st->getTempo() == 0 ? 500000 : st->getTempo();
+    int tickPerBeat = header.getDivisions() * ts->getNumerator() / ts->getDenominator();
+    int usPerTick = (usPerBeat / tickPerBeat);
+    return usPerTick;
 }
 
 int MidiFile::getTickTimeUs()

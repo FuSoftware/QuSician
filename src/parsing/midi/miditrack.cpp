@@ -156,6 +156,11 @@ vector<MidiEvent*> MidiTrack::parseEvents(vector<unsigned char> data)
                             if (data[++i] == 0x04)
                                 events.push_back(new TimeSignature(delta, data[++i], data[++i], data[++i], data[++i]));
                             break;
+                        case 0x59:
+                            //FF 59 02 sf mi Key Signature
+                            if (data[++i] == 0x02)
+                                events.push_back(new KeySignature(delta, data[++i], data[++i]));
+                            break;
                     }
                 }
             }

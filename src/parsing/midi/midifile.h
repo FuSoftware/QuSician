@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 #include "../filereader.h"
 #include "midiheader.h"
@@ -36,6 +37,7 @@ public:
 
     TimeData getTimeData();
 
+    int getTickTimeUs(SetTempo* st, TimeSignature *ts);
     int getTickTimeUs();
 
 private:

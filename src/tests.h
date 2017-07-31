@@ -15,7 +15,7 @@
 
 #include <QVector>
 
-void TestMidiFile();
+void TestMidiFile(string file);
 void TestRtMidi();
 void TestMidiOutput();
 void TestPortSelection();

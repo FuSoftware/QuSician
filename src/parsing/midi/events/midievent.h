@@ -50,4 +50,6 @@ protected:
     bool isMeta;
 };
 
+bool midiEventAbsComp(const MidiEvent* a, const MidiEvent* b);
+
 #endif // MIDIEVENT_H

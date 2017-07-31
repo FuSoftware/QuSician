@@ -14,9 +14,9 @@ int main(int argc, char *argv[])
     //MainWindow w;
     //w.show();
 
-    //TestMidiFile();
+    TestMidiFile("D:\\Partitions\\Weimtime\\Highlight\\Youll Play Your Part - WeimTeam.mid");
     //KeyboardConfTest();
-    TestMidiPlayer();
+    //TestMidiPlayer();
     //PartitionToCSV("D:\\Prog\\MidiMusicXML\\MIDI_sample_synthesia.mid","D:\\Prog\\MidiMusicXML\\MIDI_sample_synthesia.csv",";");
 
     return a.exec();

@@ -1,9 +1,7 @@
 #include "tests.h"
 
-void TestMidiFile()
+void TestMidiFile(string file)
 {
-    string file = "D:\\Prog\\MidiMusicXML\\MIDI_sample_synthesia.mid";
-
     MidiFile *f = new MidiFile(file);
 
     cout << f->toString() << endl;

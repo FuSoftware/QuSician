@@ -45,3 +45,8 @@ bool MidiEvent::isMetaEvent() const
 {
     return this->isMeta;
 }
+
+bool midiEventAbsComp(const MidiEvent* a, const MidiEvent* b)
+{
+    return a->getAbsolute() < b->getAbsolute();
+}
