@@ -8,6 +8,7 @@
 #include "communication/midioutput.h"
 #include "controller/midiplayer.h"
 #include "parsing/midi/midifile.h"
+#include "model/music/partition.h"
 
 class QMidiConfigurationWidget : public QWidget
 {

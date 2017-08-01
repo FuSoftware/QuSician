@@ -178,9 +178,9 @@ vector<MidiEvent*> MidiTrack::parseEvents(vector<unsigned char> data)
     return events;
 }
 
-string MidiTrack::toString()
+std::string MidiTrack::toString()
 {
-    ostringstream  ss;
+    std::ostringstream  ss;
     ss << "Midi header   : " << this->MTrk << "\n";
     ss << "Track Length  : " << this->length << "\n";
     ss << "Events        : " << this->events.size() << "\n";
@@ -192,10 +192,41 @@ int MidiTrack::getLength()
     return this->length + 8;
 }
 
-vector<MidiEvent*> MidiTrack::getEvents()
+std::vector<MidiEvent*> MidiTrack::getEvents()
 {
     return this->events;
 }
+
+std::vector<MidiEvent*> MidiTrack::getNoteEvents()
+{
+    std::vector<MidiEvent*> events;
+
+    for(int i=0;i<this->events.size();i++)
+    {
+        MidiEvent *e = this->events[i];
+
+        if(e->getType() == MidiEventType::NOTE_ON || e->getType() == MidiEventType::NOTE_OFF)
+            events.push_back(e);
+    }
+
+    return events;
+}
+
+std::vector<MidiEvent*> MidiTrack::getChannelEvents()
+{
+    std::vector<MidiEvent*> events;
+
+    for(int i=0;i<this->events.size();i++)
+    {
+        MidiEvent *e = this->events[i];
+
+        if(!e->isMetaEvent())
+            events.push_back(e);
+    }
+
+    return events;
+}
+
 
 int MidiTrack::getEventCount()
 {

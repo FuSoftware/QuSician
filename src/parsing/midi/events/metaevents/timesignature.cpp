@@ -23,22 +23,22 @@ std::string TimeSignature::toString()
     return oss.str();
 }
 
-int TimeSignature::getNumerator()
+int TimeSignature::getNumerator() const
 {
     return this->numerator;
 }
 
-int TimeSignature::getDenominator()
+int TimeSignature::getDenominator() const
 {
     return (1 << this->denominator);
 }
 
-int TimeSignature::getClock()
+int TimeSignature::getClock() const
 {
     return this->clock;
 }
 
-int TimeSignature::getThirtySeconds()
+int TimeSignature::getThirtySeconds() const
 {
     return this->thirtySeconds;
 }

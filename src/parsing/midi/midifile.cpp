@@ -64,8 +64,8 @@ void MidiFile::loadFile(string file)
     {
         MidiTrack *t = this->tracks[i];
 
-        int cTs = 0;
-        int cSt = 0;
+        int cTs = timeSignature.size() > 0 ? 0 : -1;
+        int cSt = tempo.size() > 0 ? 0 : -1;
         int nTs = cTs+1 >= timeSignature.size() ? -1 : cTs+1;
         int nSt = cSt+1 >= tempo.size() ? -1 : cSt+1;
 
@@ -89,18 +89,25 @@ void MidiFile::loadFile(string file)
                 if(e->getAbsolute() > tempo[nSt]->getAbsolute())
                 {
                     cSt++;
-                    nSt = nSt+1 >= timeSignature.size() ? -1 : nSt+1;
+                    nSt = nSt+1 >= tempo.size() ? -1 : nSt+1;
                 }
             }
 
-            e->generateRealTimes(this->getTickTimeUs((SetTempo*)tempo[cSt],(TimeSignature*)timeSignature[cTs]));
+            SetTempo *st = cSt >= 0 ? (SetTempo*)tempo[cSt] : new SetTempo();
+            TimeSignature *ts = cTs >=0 ? (TimeSignature*)timeSignature[cTs] : new TimeSignature() ;
+
+            int lastRt = 0;
+            if(j>0 && j < t->getEventCount())
+                lastRt = t->getEvents()[j-1]->getAbsoluteRt();
+
+            e->generateRealTimes(this->getTickTimeUs(st,ts), lastRt);
         }
     }
 
     auto end_time = std::chrono::high_resolution_clock::now();
     auto time = end_time - start_time;
 
-    std::cout << "Loaded RT in " << std::chrono::duration_cast<std::chrono::microseconds>(time).count() / 1000 << " ms" << std::endl;
+    //std::cout << "Loaded RT in " << std::chrono::duration_cast<std::chrono::microseconds>(time).count() / 1000 << " ms" << std::endl;
 }
 
 string MidiFile::toString()
@@ -160,7 +167,7 @@ TimeData MidiFile::getTimeData()
 
 int MidiFile::getTickTimeUs(SetTempo* st, TimeSignature* ts)
 {
-    int usPerBeat = st->getTempo() == 0 ? 500000 : st->getTempo();
+    int usPerBeat = st->getTempo();
     int tickPerBeat = header.getDivisions() * ts->getNumerator() / ts->getDenominator();
     int usPerTick = (usPerBeat / tickPerBeat);
     return usPerTick;

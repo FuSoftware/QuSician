@@ -1,17 +1,28 @@
 #ifndef QMUSICLISTWIDGET_H
 #define QMUSICLISTWIDGET_H
 
-#include <QWidget>
+#include <QtWidgets>
+#include <QVector>
 
-class QMusicListWidget : public QWidget
+#include "model/files/qmidifile.h"
+#include "model/files/qmusicfile.h"
+
+class QMusicListWidget : public QTableWidget
 {
     Q_OBJECT
 public:
-    explicit QMusicListWidget(QWidget *parent = nullptr);
+    QMusicListWidget(QWidget *parent = nullptr);
 
 signals:
+    void playMidi(MidiFile* f);
 
 public slots:
+    void addFile(QMusicFile* f);
+    void addFiles(QVector<QMusicFile*> f);
+    void musicSelected(int row, int column);
+
+private:
+    QVector<QMusicFile*> files;
 };
 
 #endif // QMUSICLISTWIDGET_H

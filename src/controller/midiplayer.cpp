@@ -16,12 +16,27 @@ MidiPlayer::MidiPlayer(MidiOutput *out, QObject *parent) : QObject(parent)
 void MidiPlayer::setOutput(MidiOutput *out)
 {
     this->midiout = out;
-    connect(this,SIGNAL(midiEvent(MidiEvent*)),this->midiout,SLOT(midiEvent(MidiEvent*)));
+
+    if(this->midiout != 0)
+        connect(this,SIGNAL(midiEvent(MidiEvent*)),this->midiout,SLOT(midiEvent(MidiEvent*)));
 }
 
 void MidiPlayer::addEventList(QVector<MidiEvent *> events)
 {
     this->events.push_back(events);
+}
+
+void MidiPlayer::addTracks(QVector<MidiTrack*> tracks)
+{
+    for(int i=0;i<tracks.size();i++)
+    {
+        this->addTrack(tracks[i]);
+    }
+}
+
+void MidiPlayer::addTrack(MidiTrack* track)
+{
+    this->addEventList(QVector<MidiEvent*>::fromStdVector(track->getChannelEvents()));
 }
 
 void MidiPlayer::init()
@@ -98,6 +113,12 @@ void MidiPlayer::reset()
     this->timer.restart();
 }
 
+void MidiPlayer::restart()
+{
+    reset();
+    start();
+}
+
 int MidiPlayer::getCurrentTime()
 {
     return this->timer.elapsed();
@@ -112,4 +133,29 @@ int MidiPlayer::getMeanDelta()
 
     mean /= this->deltas.size();
     return mean;
+}
+
+void MidiPlayer::play(MidiFile* f)
+{
+    this->play(QVector<MidiTrack*>::fromStdVector(f->getTracks()));
+}
+
+void MidiPlayer::play(MidiFile* f, QVector<int> tracks)
+{
+    QVector<MidiTrack*> t;
+
+    for(int i=0;i<tracks.size();i++)
+    {
+        t.push_back(f->getTracks()[tracks[i]]);
+    }
+
+    this->play(t);
+}
+
+void MidiPlayer::play(QVector<MidiTrack*> tracks)
+{
+    this->stop();
+    this->events.clear();
+    this->addTracks(tracks);
+    this->restart();
 }

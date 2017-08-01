@@ -20,7 +20,8 @@ enum MidiEventType{
     SET_TEMPO,
     SMPTE_OFFSET,
     TEXT_EVENT,
-    TIME_SIGNATURE
+    TIME_SIGNATURE,
+    KEY_SIGNATURE
 };
 
 
@@ -29,7 +30,7 @@ class MidiEvent
 public:
     MidiEvent(int delta);
     void generateAbsolute(int previousAbs);
-    void generateRealTimes(int usPerTick);
+    void generateRealTimes(int usPerTick, int prevAbsRt = 0);
 
     virtual std::vector<unsigned char> getData() = 0;
     int getAbsolute() const;

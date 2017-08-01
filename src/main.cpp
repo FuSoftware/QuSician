@@ -3,11 +3,15 @@
 
 #include "tests.h"
 
+#include "model/files/qmusicfile.h"
+
 int main(int argc, char *argv[])
 {
     //Registering types
     qRegisterMetaType<MidiNote>("MidiNote");
     qRegisterMetaType<MidiEvent*>("MidiEvent*");
+    qRegisterMetaType<QMusicFile*>("QMusicFile*");
+    qRegisterMetaType<MidiFile*>("MidiFile*");
 
     //Application
     QApplication a(argc, argv);
@@ -16,8 +20,8 @@ int main(int argc, char *argv[])
 
     //TestMidiFile("D:\\Partitions\\Weimtime\\Highlight\\Youll Play Your Part - WeimTeam.mid");
     //KeyboardConfTest();
-    TestMidiPlayer("D:\\Partitions\\Weimtime\\Highlight\\The Magic Inside (duet).mid");
-    //PartitionToCSV("D:\\Prog\\MidiMusicXML\\MIDI_sample_synthesia.mid","D:\\Prog\\MidiMusicXML\\MIDI_sample_synthesia.csv",";");
+    //TestMidiPlayer("D:\\Partitions\\Weimtime\\Highlight\\Youll Play Your Part - WeimTeam.mid");
+    TestMusicList((QStringList() << "D:\\Partitions\\Weimtime\\Highlight\\" << "D:\\Partitions\\Weimtime\\Season 2\\"), 1);
 
     return a.exec();
 }

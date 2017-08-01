@@ -9,28 +9,28 @@
 #include "events/events.h"
 #include "../conversion.h"
 
-using namespace std;
-
 class MidiTrack
 {
 public:
     MidiTrack();
-    MidiTrack(vector<unsigned char> data);
-    void load(vector<unsigned char> data);
-    string toString();
+    MidiTrack(std::vector<unsigned char> data);
+    void load(std::vector<unsigned char> data);
+    std::string toString();
 
     int getLength();
-    vector<MidiEvent*> getEvents();
+    std::vector<MidiEvent*> getEvents();
+    std::vector<MidiEvent*> getNoteEvents();
+    std::vector<MidiEvent*> getChannelEvents();
     int getEventCount();
 
-    static vector<MidiEvent*> parseEvents(vector<unsigned char> data);
+    static vector<MidiEvent*> parseEvents(std::vector<unsigned char> data);
 
 private:
     void loadEvents(vector<unsigned char> data);
 
-    string MTrk;
+    std::string MTrk;
     int length;
-    vector<MidiEvent*> events;
+    std::vector<MidiEvent*> events;
 };
 
 #endif // MIDITRACK_H

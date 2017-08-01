@@ -7,7 +7,7 @@ SetTempo::SetTempo(int delta, int m) : MidiEvent(delta)
     this->isMeta = true;
 }
 
-int SetTempo::getTempo()
+int SetTempo::getTempo() const
 {
     return this->microseconds;
 }

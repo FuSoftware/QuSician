@@ -18,13 +18,11 @@ std::vector<unsigned char> FileReader::ReadAllBytes(string filename)
 
         char *buffer = new char [length];
 
-        cout << "Reading " << length << " characters... " << endl;
+        //cout << "Reading " << length << " characters... " << endl;
         // read data as a block:
         is.read (buffer,length);
 
-        if (is)
-          cout << "all characters read successfully." << endl;
-        else
+        if (!is)
           cout << "error: only " << is.gcount() << " could be read" << endl;
         is.close();
 

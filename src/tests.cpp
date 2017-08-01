@@ -387,5 +387,29 @@ void TestMidiPlayer(std::string file)
     QObject::connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
     midiPlayer->moveToThread(t);
     t->start();
+}
 
+void TestMusicList(QStringList folders, int port)
+{
+    QMusicListWidget *w = new QMusicListWidget(0);
+    FolderScanner *f = new FolderScanner(folders);
+
+    QThread *t = new QThread();
+    QObject::connect(t, SIGNAL(started()),  f, SLOT(process()));
+    QObject::connect(f, SIGNAL(finished()), t, SLOT(quit()));
+    QObject::connect(f, SIGNAL(finished()), f, SLOT(deleteLater()));
+    QObject::connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
+    f->moveToThread(t);
+
+    QObject::connect(f,SIGNAL(fileLoaded(QMusicFile*)),w,SLOT(addFile(QMusicFile*)));
+    t->start();
+
+    MidiPlayer *player = new MidiPlayer();
+    MidiOutput *out = new MidiOutput(port,player);
+    player->setOutput(out);
+    player->init();
+
+    QObject::connect(w,SIGNAL(playMidi(MidiFile*)),player,SLOT(play(MidiFile*)));
+
+    w->show();
 }
