@@ -21,6 +21,11 @@ void MidiPlayer::setOutput(MidiOutput *out)
         connect(this,SIGNAL(midiEvent(MidiEvent*)),this->midiout,SLOT(midiEvent(MidiEvent*)));
 }
 
+void MidiPlayer::clear()
+{
+    this->events.clear();
+}
+
 void MidiPlayer::addEventList(QVector<MidiEvent *> events)
 {
     this->events.push_back(events);

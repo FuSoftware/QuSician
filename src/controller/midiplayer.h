@@ -21,6 +21,8 @@ public:
     MidiPlayer(QVector<MidiEvent*> events, MidiOutput *out = 0, QObject *parent = 0);
     MidiPlayer(MidiOutput *out = 0, QObject *parent = 0);
     void setOutput(MidiOutput *out);
+
+    void clear();
     void addEventList(QVector<MidiEvent*> events);
     void addTracks(QVector<MidiTrack*> tracks);
     void addTrack(MidiTrack* track);

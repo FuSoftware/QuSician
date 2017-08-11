@@ -8,6 +8,10 @@ QMusicListWidget::QMusicListWidget(QWidget *parent) : QTableWidget(parent)
 
 void QMusicListWidget::addFile(QMusicFile* f)
 {
+    if(f == 0)
+        return;
+
+
     QVector<QVariant> data = f->getData();
 
     this->insertRow(this->rowCount());

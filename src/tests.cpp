@@ -82,13 +82,13 @@ void TestMidiOutput()
     }
 
     // Check outputs.
-    int nPorts = midiout->getPortCount();
-    int port;
+    unsigned int nPorts = midiout->getPortCount();
+    unsigned int port;
     vector<unsigned char> message;
     string portName;
 
     std::cout << "\nThere are " << nPorts << " MIDI output ports available.\n";
-    for ( unsigned int i=0; i<nPorts; i++ ) {
+    for (unsigned int i=0; i<nPorts; i++ ) {
         try {
             portName = midiout->getPortName(i);
         }
@@ -148,7 +148,7 @@ void MidiWorkerTest()
     vector<MidiPort> ports = RtMidiUtils::getInputPorts();
 
     cout << "Available input ports : " << endl;
-    for(int i=0;i<ports.size();i++)
+    for(unsigned int i=0;i<ports.size();i++)
     {
         cout << "    " << ports[i].name << endl;
     }
@@ -181,7 +181,7 @@ void PartitionTestMidi()
 
     vector<MidiTrack*> tracks = f->getTracks();
 
-    for(int i=0;i<tracks.size();i++)
+    for(unsigned int i=0;i<tracks.size();i++)
     {
         cout <<  i << " : " << tracks[i]->getEventCount() << " events" << endl;
     }
@@ -197,7 +197,7 @@ void PartitionTestMidi()
     cout << "Found " << notes->size() << " notes" << endl;
 
     int err = 0;
-    for(int i=0;i<notes->size();i++)
+    for(unsigned int i=0;i<notes->size();i++)
     {
         if((*notes)[i]->getStop() == -1)
         {
@@ -301,7 +301,7 @@ void PartitionToCSV(std::string file, std::string csv, std::string delimiter)
     vector<MidiTrack*> tracks = f->getTracks();
     int track=0;
 
-    for(int i=0;i<tracks.size();i++)
+    for(unsigned int i=0;i<tracks.size();i++)
     {
         cout <<  i << " : " << tracks[i]->getEventCount() << " events" << endl;
     }
@@ -374,7 +374,7 @@ void TestMidiPlayer(std::string file)
     MidiOutput *midiOutput = new MidiOutput(port);
     MidiPlayer *midiPlayer = new MidiPlayer(midiOutput);
 
-    for(int i=0;i<trk.size();i++)
+    for(unsigned int i=0;i<trk.size();i++)
     {
         MidiTrack *track = f->getTracks()[trk[i]];
         midiPlayer->addEventList(QVector<MidiEvent*>::fromStdVector(track->getEvents()));

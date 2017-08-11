@@ -14,7 +14,7 @@ class MidiTrack
 public:
     MidiTrack();
     MidiTrack(std::vector<unsigned char> data);
-    void load(std::vector<unsigned char> data);
+    bool load(std::vector<unsigned char> data);
     std::string toString();
 
     int getLength();
@@ -23,10 +23,13 @@ public:
     std::vector<MidiEvent*> getChannelEvents();
     int getEventCount();
 
+    bool isLoaded();
+
     static vector<MidiEvent*> parseEvents(std::vector<unsigned char> data);
 
 private:
     void loadEvents(vector<unsigned char> data);
+    bool loaded = false;
 
     std::string MTrk;
     int length;

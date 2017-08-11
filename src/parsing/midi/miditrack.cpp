@@ -10,7 +10,7 @@ MidiTrack::MidiTrack(vector<unsigned char> data)
     load(data);
 }
 
-void MidiTrack::load(vector<unsigned char> data)
+bool MidiTrack::load(vector<unsigned char> data)
 {
     //MThd - 4 bytes
     unsigned char MTrkBuffer[4];
@@ -23,7 +23,8 @@ void MidiTrack::load(vector<unsigned char> data)
     if(MTrk != "MTrk")
     {
         cerr << "Error while parsing track, MTrk header not found" << endl;
-        return;
+        this->loaded = false;
+        return false;
     }
 
     //Length - 4 bytes
@@ -37,6 +38,9 @@ void MidiTrack::load(vector<unsigned char> data)
     //Data
     vector<unsigned char> trackData(data.begin() + 8, data.begin() + 8 + this->length);
     loadEvents(trackData);
+
+    this->loaded = true;
+    return true;
 }
 
 void MidiTrack::loadEvents(vector<unsigned char> data)
@@ -185,6 +189,11 @@ std::string MidiTrack::toString()
     ss << "Track Length  : " << this->length << "\n";
     ss << "Events        : " << this->events.size() << "\n";
     return ss.str();
+}
+
+bool MidiTrack::isLoaded()
+{
+    return this->loaded;
 }
 
 int MidiTrack::getLength()

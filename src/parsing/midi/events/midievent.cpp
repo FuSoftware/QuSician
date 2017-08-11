@@ -59,7 +59,7 @@ MidiEvent *getLastEventBefore(std::vector<MidiEvent*> events, int ticks, MidiEve
 {
     MidiEvent *e = 0;
 
-    for(int i=0;i<events.size();i++)
+    for(unsigned int i=0;i<events.size();i++)
     {
         MidiEvent *t = events[i];
 
@@ -77,7 +77,7 @@ int getLastPositionBefore(std::vector<MidiEvent*> events, int ticks, MidiEventTy
 {
     int res = 0;
 
-    for(int i=0;i<events.size();i++)
+    for(unsigned int i=0;i<events.size();i++)
     {
         MidiEvent *t = events[i];
 

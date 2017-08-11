@@ -28,7 +28,14 @@ void MidiFile::loadFile(string file)
         if(i==0)
             this->fileInfo = t;
 
-        tracks.push_back(t);
+        if(!t->isLoaded())
+        {
+            std::cerr << "Track " << i << " from " << file << " could not be loaded" << std::endl;
+        }
+        else
+        {
+            tracks.push_back(t);
+        }
 
         i++;
         remainingBytes.erase(remainingBytes.begin(),remainingBytes.begin()+t->getLength());
@@ -59,7 +66,7 @@ void MidiFile::loadFile(string file)
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
-    //Compute RT
+    //Compute RT for each track
     for(unsigned int i=0;i<this->tracks.size();i++)
     {
         MidiTrack *t = this->tracks[i];
@@ -69,6 +76,7 @@ void MidiFile::loadFile(string file)
         int nTs = cTs+1 >= timeSignature.size() ? -1 : cTs+1;
         int nSt = cSt+1 >= tempo.size() ? -1 : cSt+1;
 
+        //For each event
         for(int j=0;j<t->getEventCount();j++)
         {
             MidiEvent *e = t->getEvents()[j];
@@ -96,9 +104,7 @@ void MidiFile::loadFile(string file)
             SetTempo *st = cSt >= 0 ? (SetTempo*)tempo[cSt] : new SetTempo();
             TimeSignature *ts = cTs >=0 ? (TimeSignature*)timeSignature[cTs] : new TimeSignature() ;
 
-            int lastRt = 0;
-            if(j>0 && j < t->getEventCount())
-                lastRt = t->getEvents()[j-1]->getAbsoluteRt();
+            int lastRt = j > 0 ? t->getEvents()[j-1]->getAbsoluteRt() : 0;
 
             e->generateRealTimes(this->getTickTimeUs(st,ts), lastRt);
         }
@@ -138,7 +144,7 @@ TimeData MidiFile::getTimeData()
     SetTempo *st = 0;
 
     vector<MidiEvent*> events = fileInfo->getEvents();
-    for(int i=0;i<events.size();i++)
+    for(unsigned int i=0;i<events.size();i++)
     {
         if(events[i]->getType() == MidiEventType::TIME_SIGNATURE)
         {
