@@ -122,7 +122,8 @@ HEADERS += \
     controller/folderscanner.h \
     model/files/qmusicfile.h \
     model/files/qmidifile.h \
-    model/files/qmusicxmlfile.h
+    model/files/qmusicxmlfile.h \
+    rtmidi/RtMidiUtils.h
 
 #Refer to https://www.music.mcgill.ca/~gary/rtmidi/index.html#compiling
 

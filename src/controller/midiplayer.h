@@ -8,7 +8,7 @@
 #include <QVector>
 #include <QTime>
 
-#include "rtmidi/rtmidiutils.h"
+#include "rtmidi/RtMidiUtils.h"
 #include "communication/midioutput.h"
 
 #include "parsing/midi/events/events.h"

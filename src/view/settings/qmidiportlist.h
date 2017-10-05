@@ -4,7 +4,7 @@
 #include <QtWidgets>
 #include <QVector>
 
-#include "rtmidi/rtmidiutils.h"
+#include "rtmidi/RtMidiUtils.h"
 
 class QMidiPortList : public QWidget
 {

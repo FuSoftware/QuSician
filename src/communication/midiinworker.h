@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include <vector>
-#include "rtmidi/rtmidiutils.h"
+#include "rtmidi/RtMidiUtils.h"
 
 using namespace std;
 
