@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     //MainWindow w;
     //w.show();
 
+    TestRtMidi();
+
     //TestMidiFile("D:\\Partitions\\Weimtime\\Highlight\\Youll Play Your Part - WeimTeam.mid");
     //KeyboardConfTest();
     //TestMidiPlayer("D:\\Partitions\\Weimtime\\Highlight\\Youll Play Your Part - WeimTeam.mid");
@@ -26,7 +28,8 @@ int main(int argc, char *argv[])
 
     //Laptop
     //TestMusicList((QStringList() << "E:\\Partitions\\" << "E:\\Partitions\\Weimtime\\Season 3\\"), 1);
-    TestMusicList((QStringList() << "E:\\Partitions\\Weimtime\\QuSician\\"), 1);
+    //TestMusicList((QStringList() << "E:\\Partitions\\Weimtime\\QuSician\\"), 1);
+    //TestMusicList((QStringList() << "~/Partitions/"), 1);
 
     return a.exec();
 }

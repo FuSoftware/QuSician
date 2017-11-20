@@ -99,7 +99,6 @@ HEADERS += \
     parsing/midi/events/metaevents/textevent.h \
     parsing/midi/events/metaevents/timesignature.h \
     communication/midikeyboard.h \
-    rtmidi/RtMidi.h \
     view/settings/qmidiportselection.h \
     rtmidi/RtMidiUtils.h \
     view/settings/qmidiportlist.h \
@@ -123,7 +122,8 @@ HEADERS += \
     model/files/qmusicfile.h \
     model/files/qmidifile.h \
     model/files/qmusicxmlfile.h \
-    rtmidi/RtMidiUtils.h
+    rtmidi/RtMidiUtils.h \
+    rtmidi/RtMidi.h
 
 #Refer to https://www.music.mcgill.ca/~gary/rtmidi/index.html#compiling
 

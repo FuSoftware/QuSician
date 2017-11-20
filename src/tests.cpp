@@ -19,10 +19,11 @@ void TestRtMidi()
     catch (RtMidiError &error) {
         // Handle the exception here
         error.printMessage();
+        return;
     }
     // Check inputs.
     unsigned int nPorts = midiin->getPortCount();
-    std::cout << "\nThere are " << nPorts << " MIDI input sources available.\n";
+    std::cout << "There are " << nPorts << " MIDI input sources available.\n";
     std::string portName;
     for ( unsigned int i=0; i<nPorts; i++ ) {
         try {
@@ -41,12 +42,12 @@ void TestRtMidi()
     }
     catch ( RtMidiError &error ) {
         error.printMessage();
-        exit( EXIT_FAILURE );
+        return;
     }
 
     // Check outputs.
     nPorts = midiout->getPortCount();
-    std::cout << "\nThere are " << nPorts << " MIDI output ports available.\n";
+    std::cout << "There are " << nPorts << " MIDI output ports available.\n";
     for ( unsigned int i=0; i<nPorts; i++ ) {
         try {
             portName = midiout->getPortName(i);
