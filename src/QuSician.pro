@@ -134,4 +134,9 @@ win32 {
     LIBS += -lwinmm
 }
 
+unix{
+    DEFINES += __LINUX_ALSA__
+    LIBS += -lasound -lpthread
+}
+
 DISTFILES +=
