@@ -7,7 +7,7 @@ RtMidiUtils::RtMidiUtils()
 
 vector<MidiPort> RtMidiUtils::getInputPorts()
 {
-    vector<MidiPort> ports;
+    std::vector<MidiPort> ports;
     RtMidiIn *midiin = 0;
 
     try

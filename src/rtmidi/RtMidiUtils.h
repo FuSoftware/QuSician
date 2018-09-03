@@ -8,8 +8,6 @@
 #include "RtMidi.h"
 #include "model/music/note.h"
 
-using namespace std;
-
 struct MidiNote{
     bool state;
     int key;
@@ -20,7 +18,7 @@ struct MidiNote{
 
 struct MidiPort{
     int id;
-    string name;
+    std::string name;
 };
 
 bool midiNoteComp(const MidiNote& a, const MidiNote& b);

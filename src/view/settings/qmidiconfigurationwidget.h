@@ -3,12 +3,11 @@
 
 #include <QtWidgets>
 
-#include "qkeyboardwidget.h"
-#include "qmidiportselection.h"
-#include "communication/midioutput.h"
-#include "controller/midiplayer.h"
-#include "parsing/midi/midifile.h"
-#include "model/music/partition.h"
+class MidiOutput;
+class MidiPlayer;
+class QKeyboardWidget;
+class QMidiPortSelection;
+class Partition;
 
 class QMidiConfigurationWidget : public QWidget
 {

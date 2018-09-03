@@ -1,6 +1,6 @@
 #include "textevent.h"
 
-TextEvent::TextEvent(int delta, string text, TextEventType type) : MidiEvent(delta)
+TextEvent::TextEvent(int delta, std::string text, TextEventType type) : MidiEvent(delta)
 {
     this->text = text;
     this->textType = type;

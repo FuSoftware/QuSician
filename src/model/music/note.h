@@ -45,7 +45,7 @@ public:
 
     static bool isSharp(int key);
     static bool isSharp(Note* n);
-    static Note* getLastOpenKey(vector<Note*> *notes, int key);
+    static Note* getLastOpenKey(std::vector<Note*> *notes, int key);
 
 private:
     int start;

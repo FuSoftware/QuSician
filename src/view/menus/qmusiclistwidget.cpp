@@ -11,7 +11,6 @@ void QMusicListWidget::addFile(QMusicFile* f)
     if(f == 0)
         return;
 
-
     QVector<QVariant> data = f->getData();
 
     this->insertRow(this->rowCount());
@@ -37,5 +36,5 @@ void QMusicListWidget::addFiles(QVector<QMusicFile*> f)
 void QMusicListWidget::musicSelected(int row, int column)
 {
     QMusicFile *f = this->files[row];
-    emit playMidi((QMidiFile*)f);
+    emit playMidi(((QMidiFile*)f)->getMidi());
 }

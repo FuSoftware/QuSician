@@ -1,8 +1,15 @@
 #include "qmidifile.h"
 
-QMidiFile::QMidiFile(QFileInfo info) : QMusicFile(info), MidiFile(info.absoluteFilePath().toStdString())
+#include "parsing/midi/midiparser.h"
+
+QMidiFile::QMidiFile(QFileInfo info) : QMusicFile(info)
 {
     this->load(info);
+}
+
+MidiFile *QMidiFile::getMidi()
+{
+    return this->midi;
 }
 
 void QMidiFile::load(QFileInfo info)
@@ -14,4 +21,6 @@ void QMidiFile::load(QFileInfo info)
     this->folder = info.absoluteDir().dirName();
     this->title = info.baseName();
     this->completed = -1;
+
+    this->midi = MidiParser::parseFile(info.absoluteFilePath().toStdString());
 }

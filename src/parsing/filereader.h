@@ -5,14 +5,12 @@
 #include <fstream>
 #include <vector>
 
-using namespace std;
-
 class FileReader
 {
 public:
     FileReader();
 
-    static std::vector<unsigned char> ReadAllBytes(string filename);
+    static std::vector<unsigned char> ReadAllBytes(std::string filename);
 };
 
 #endif // FILEREADER_H

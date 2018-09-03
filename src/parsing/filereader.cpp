@@ -5,10 +5,10 @@ FileReader::FileReader()
 
 }
 
-std::vector<unsigned char> FileReader::ReadAllBytes(string filename)
+std::vector<unsigned char> FileReader::ReadAllBytes(std::string filename)
 {
-    ifstream is (filename, std::ifstream::binary);
-    vector<unsigned char> result;
+    std::ifstream is (filename, std::ifstream::binary);
+    std::vector<unsigned char> result;
 
     if (is) {
         // get length of file:
@@ -23,7 +23,7 @@ std::vector<unsigned char> FileReader::ReadAllBytes(string filename)
         is.read (buffer,length);
 
         if (!is)
-          cout << "error: only " << is.gcount() << " could be read" << endl;
+          std::cout << "error: only " << is.gcount() << " could be read" << std::endl;
         is.close();
 
         // ...buffer contains the entire file...
@@ -37,7 +37,7 @@ std::vector<unsigned char> FileReader::ReadAllBytes(string filename)
     }
     else
     {
-        cout << "File " << filename << " could not be found" << endl;
+        std::cout << "File " << filename << " could not be found" << std::endl;
     }
 
     return result;

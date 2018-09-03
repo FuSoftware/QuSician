@@ -1,5 +1,13 @@
 #include "qmidiconfigurationwidget.h"
 
+#include "parsing/midi/midiparser.h"
+#include "qkeyboardwidget.h"
+#include "qmidiportselection.h"
+#include "communication/midioutput.h"
+#include "controller/midiplayer.h"
+#include "parsing/midi/midifile.h"
+#include "model/music/partition.h"
+
 QMidiConfigurationWidget::QMidiConfigurationWidget(QWidget *parent) : QWidget(parent)
 {
     initialize();
@@ -43,7 +51,7 @@ void QMidiConfigurationWidget::testAudio()
 
     //Partition
     string file = "D:\\Prog\\MidiMusicXML\\A Changeling Can Change - WeimTeam.mid";
-    MidiFile *f = new MidiFile(file);
+    MidiFile *f = MidiParser::parseFile(file);
     this->midiPlayer = new MidiPlayer(this->midiOutput, this);
 
     //TEST : MidiEvents

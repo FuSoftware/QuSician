@@ -1,5 +1,7 @@
 #include "midiplayer.h"
 
+#include "parsing/midi/miditrack.h"
+
 MidiPlayer::MidiPlayer(QVector<MidiEvent *> events , MidiOutput *out, QObject *parent) : QObject(parent)
 {
     addEventList(events);
@@ -17,7 +19,7 @@ void MidiPlayer::setOutput(MidiOutput *out)
 {
     this->midiout = out;
 
-    if(this->midiout != 0)
+    if(this->midiout != nullptr)
         connect(this,SIGNAL(midiEvent(MidiEvent*)),this->midiout,SLOT(midiEvent(MidiEvent*)));
 }
 

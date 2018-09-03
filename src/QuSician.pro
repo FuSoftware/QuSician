@@ -72,7 +72,8 @@ SOURCES += \
     controller/folderscanner.cpp \
     model/files/qmusicfile.cpp \
     model/files/qmidifile.cpp \
-    model/files/qmusicxmlfile.cpp
+    model/files/qmusicxmlfile.cpp \
+    parsing/midi/midiparser.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -123,7 +124,8 @@ HEADERS += \
     model/files/qmidifile.h \
     model/files/qmusicxmlfile.h \
     rtmidi/RtMidiUtils.h \
-    rtmidi/RtMidi.h
+    rtmidi/RtMidi.h \
+    parsing/midi/midiparser.h
 
 #Refer to https://www.music.mcgill.ca/~gary/rtmidi/index.html#compiling
 

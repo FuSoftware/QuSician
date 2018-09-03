@@ -5,14 +5,8 @@
 #include <vector>
 #include <algorithm>
 
-#include "../filereader.h"
-#include "midiheader.h"
-#include "miditrack.h"
-
 //TODO : Remove
 #include <chrono>
-
-using namespace std;
 
 struct TimeData
 {
@@ -23,20 +17,25 @@ struct TimeData
     int thirtySeconds;
 };
 
+class SetTempo;
+class TimeSignature;
+class MidiHeader;
+class MidiTrack;
 class MidiFile
 {
 public:
     MidiFile();
-    MidiFile(string file);
 
-    void loadFile(string file);
+    void addtrack(MidiTrack* track);
+    void setTracks(std::vector<MidiTrack*> tracks);
+    void setFileInfo(MidiTrack *track);
+    void setHeader(MidiHeader* header);
 
-    vector<MidiTrack*> getTracks();
+    void loadEvents();
+    std::vector<MidiTrack*> getTracks();
 
-    string toString();
-    string getTracksInfo();
-
-    MidiHeader header;
+    std::string toString();
+    std::string getTracksInfo();
 
     TimeData getTimeData();
 
@@ -44,8 +43,9 @@ public:
     int getTickTimeUs();
 
 private:
+    MidiHeader *header;
     MidiTrack *fileInfo;
-    vector<MidiTrack*> tracks;
+    std::vector<MidiTrack*> tracks;
 };
 
 #endif // MIDIFILE_H

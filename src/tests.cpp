@@ -1,8 +1,14 @@
 #include "tests.h"
+#include "parsing/midi/midiparser.h"
+
+#include "communication/midioutput.h"
+#include "communication/midikeyboard.h"
+#include "controller/midiplayer.h"
+#include <QObject>
 
 void TestMidiFile(string file)
 {
-    MidiFile *f = new MidiFile(file);
+    MidiFile *f = MidiParser::parseFile(file);
 
     cout << f->toString() << endl;
 }
@@ -14,7 +20,7 @@ void TestRtMidi()
 
     try
     {
-        midiin = new RtMidiIn();
+        midiin = new RtMidiIn(RtMidi::LINUX_ALSA);
     }
     catch (RtMidiError &error) {
         // Handle the exception here
@@ -146,16 +152,16 @@ void TestPortSelection()
 void MidiWorkerTest()
 {
     int port;
-    vector<MidiPort> ports = RtMidiUtils::getInputPorts();
+    std::vector<MidiPort> ports = RtMidiUtils::getInputPorts();
 
-    cout << "Available input ports : " << endl;
+    std::cout << "Available input ports : " << std::endl;
     for(unsigned int i=0;i<ports.size();i++)
     {
-        cout << "    " << ports[i].name << endl;
+        std::cout << "    " << ports[i].name << std::endl;
     }
 
-    cout << endl << "Port to use : ";
-    cin >> port;
+    std::cout << std::endl << "Port to use : ";
+    std::cin >> port;
 
     MidiInWorker *w = new MidiInWorker(port);
     QThread *t = new QThread();
@@ -169,33 +175,33 @@ void MidiWorkerTest()
     t->start();
 
     char input;
-    cin.get(input);
+    std::cin.get(input);
 }
 
 void PartitionTestMidi()
 {
-    string file = "D:\\Prog\\MidiMusicXML\\MIDI_sample_synthesia.mid";
+    std::string file = "D:\\Prog\\MidiMusicXML\\MIDI_sample_synthesia.mid";
 
-    MidiFile *f = new MidiFile(file);
+    MidiFile *f = MidiParser::parseFile(file);
 
     int track;
 
-    vector<MidiTrack*> tracks = f->getTracks();
+    std::vector<MidiTrack*> tracks = f->getTracks();
 
     for(unsigned int i=0;i<tracks.size();i++)
     {
-        cout <<  i << " : " << tracks[i]->getEventCount() << " events" << endl;
+        std::cout <<  i << " : " << tracks[i]->getEventCount() << " events" << std::endl;
     }
 
-    cout << endl << "Choose a track to parse : ";
-    cin >> track;
+    std::cout << endl << "Choose a track to parse : ";
+    std::cin >> track;
 
     MidiTrack *trk = tracks[track];
 
     Partition *p = new Partition(trk);
-    vector<Note*> *notes = p->getNotes();
+    std::vector<Note*> *notes = p->getNotes();
 
-    cout << "Found " << notes->size() << " notes" << endl;
+    std::cout << "Found " << notes->size() << " notes" << std::endl;
 
     int err = 0;
     for(unsigned int i=0;i<notes->size();i++)
@@ -206,12 +212,12 @@ void PartitionTestMidi()
         }
     }
 
-    cout << err << " notes do not end" << endl;
+    std::cout << err << " notes do not end" << std::endl;
 }
 
 void KeyboardConfTest()
 {
-    QMidiConfigurationWidget *w = new QMidiConfigurationWidget(0);
+    QMidiConfigurationWidget *w = new QMidiConfigurationWidget(nullptr);
     w->show();
 }
 
@@ -221,8 +227,8 @@ void MidiInOutTest()
     int portIn;
     int portOut;
 
-    RtMidiIn *midiin = 0;
-    RtMidiOut *midiout = 0;
+    RtMidiIn *midiin = nullptr;
+    RtMidiOut *midiout = nullptr;
 
     try
     {
@@ -298,7 +304,7 @@ void MidiInOutTest()
 
 void PartitionToCSV(std::string file, std::string csv, std::string delimiter)
 {
-    MidiFile *f = new MidiFile(file);
+    MidiFile *f = MidiParser::parseFile(file);
     vector<MidiTrack*> tracks = f->getTracks();
     int track=0;
 
@@ -353,7 +359,7 @@ void TestMidiPlayer(std::string file)
         file = QFileDialog::getOpenFileName(0,QString("Open MIDI File"), QString(), QString("MIDI Files (*.mid)")).toStdString();
 
     //Track
-    MidiFile *f = new MidiFile(file);
+    MidiFile *f = MidiParser::parseFile(file);
     std::cout << std::endl << f->getTracksInfo() << std::endl;
     std::cout << "Track : ";
 
@@ -392,7 +398,7 @@ void TestMidiPlayer(std::string file)
 
 void TestMusicList(QStringList folders, int port)
 {
-    QMusicListWidget *w = new QMusicListWidget(0);
+    QMusicListWidget *w = new QMusicListWidget(nullptr);
     FolderScanner *f = new FolderScanner(folders);
 
     QThread *t = new QThread();

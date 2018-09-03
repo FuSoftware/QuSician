@@ -5,8 +5,6 @@
 
 #include "../midievent.h"
 
-using namespace std;
-
 enum TextEventType
 {
     COPYRIGHT_NOTICE = 0x02,
@@ -20,11 +18,11 @@ enum TextEventType
 class TextEvent : public MidiEvent
 {
 public:
-    TextEvent(int delta, string text, TextEventType type);
+    TextEvent(int delta, std::string text, TextEventType type);
     std::vector<unsigned char> getData();
 
 private:
-    string text;
+    std::string text;
     TextEventType textType;
 
 };

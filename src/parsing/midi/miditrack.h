@@ -13,27 +13,20 @@ class MidiTrack
 {
 public:
     MidiTrack();
-    MidiTrack(std::vector<unsigned char> data);
-    bool load(std::vector<unsigned char> data);
     std::string toString();
 
+    void setEvents(std::vector<MidiEvent*> events);
+
     int getLength();
+    void setLength(int length);
     std::vector<MidiEvent*> getEvents();
     std::vector<MidiEvent*> getNoteEvents();
     std::vector<MidiEvent*> getChannelEvents();
     int getEventCount();
 
-    bool isLoaded();
-
-    static vector<MidiEvent*> parseEvents(std::vector<unsigned char> data);
-
 private:
-    void loadEvents(vector<unsigned char> data);
-    bool loaded = false;
-
-    std::string MTrk;
-    int length;
     std::vector<MidiEvent*> events;
+    int length;
 };
 
 #endif // MIDITRACK_H

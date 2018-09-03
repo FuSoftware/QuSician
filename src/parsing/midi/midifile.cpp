@@ -1,53 +1,65 @@
 #include "midifile.h"
+#include "midiheader.h"
+#include "miditrack.h"
+#include "events/events.h"
 
 MidiFile::MidiFile()
 {
 
 }
 
-MidiFile::MidiFile(string file)
+std::string MidiFile::toString()
 {
-    loadFile(file);
+    return header->toString() + "\n" + getTracksInfo();
 }
 
-void MidiFile::loadFile(string file)
+void MidiFile::addtrack(MidiTrack* track)
 {
-    vector<unsigned char> data = FileReader::ReadAllBytes(file);
-    vector<unsigned char> headerData(data.begin(), data.begin()+14);
+    this->tracks.push_back(track);
+}
 
-    header.loadData(headerData);
+void MidiFile::setTracks(std::vector<MidiTrack*> tracks)
+{
+    this->tracks = tracks;
+}
 
-    vector<unsigned char> remainingBytes(data.begin() + 14, data.end());
+void MidiFile::setFileInfo(MidiTrack *track)
+{
+    this->fileInfo = track;
+}
 
-    int i=0;
 
-    while(remainingBytes.size() > 0)
+void MidiFile::setHeader(MidiHeader* header)
+{
+    this->header = header;
+}
+
+std::string MidiFile::getTracksInfo()
+{
+    std::ostringstream  ss;
+
+    for(unsigned int i=0;i<tracks.size();i++)
     {
-        MidiTrack *t = new MidiTrack(remainingBytes);
-
-        if(i==0)
-            this->fileInfo = t;
-
-        if(!t->isLoaded())
-        {
-            std::cerr << "Track " << i << " from " << file << " could not be loaded" << std::endl;
-        }
-        else
-        {
-            tracks.push_back(t);
-        }
-
-        i++;
-        remainingBytes.erase(remainingBytes.begin(),remainingBytes.begin()+t->getLength());
+        ss << "Track " << i << std::endl << tracks[i]->toString() << std::endl;
     }
 
+    return ss.str();
+}
+
+std::vector<MidiTrack*> MidiFile::getTracks()
+{
+    return this->tracks;
+}
+
+void MidiFile::loadEvents()
+{
     //Compute absolute times and store SetTempo Events
     std::vector<MidiEvent*> tempo;
     std::vector<MidiEvent*> timeSignature;
 
-    for(unsigned int i=0;i<this->tracks.size();i++)
+    for(unsigned int i=0;i<tracks.size();i++)
     {
-        MidiTrack *t = this->tracks[i];
+        MidiTrack *t = tracks[i];
         for(int j=0;j<t->getEventCount();j++)
         {
             MidiEvent *e = t->getEvents()[j];
@@ -63,8 +75,6 @@ void MidiFile::loadFile(string file)
 
     std::sort(timeSignature.begin(),timeSignature.end(),midiEventAbsComp);
     std::sort(tempo.begin(),tempo.end(),midiEventAbsComp);
-
-    auto start_time = std::chrono::high_resolution_clock::now();
 
     //Compute RT for each track
     for(unsigned int i=0;i<this->tracks.size();i++)
@@ -109,41 +119,14 @@ void MidiFile::loadFile(string file)
             e->generateRealTimes(this->getTickTimeUs(st,ts), lastRt);
         }
     }
-
-    auto end_time = std::chrono::high_resolution_clock::now();
-    auto time = end_time - start_time;
-
-    //std::cout << "Loaded RT in " << std::chrono::duration_cast<std::chrono::microseconds>(time).count() / 1000 << " ms" << std::endl;
-}
-
-string MidiFile::toString()
-{
-    return header.toString() + "\n" + getTracksInfo();
-}
-
-string MidiFile::getTracksInfo()
-{
-    ostringstream  ss;
-
-    for(unsigned int i=0;i<tracks.size();i++)
-    {
-        ss << "Track " << i << endl << tracks[i]->toString() << endl;
-    }
-
-    return ss.str();
-}
-
-vector<MidiTrack*> MidiFile::getTracks()
-{
-    return this->tracks;
 }
 
 TimeData MidiFile::getTimeData()
 {
-    TimeSignature* ts = 0;
-    SetTempo *st = 0;
+    TimeSignature* ts = nullptr;
+    SetTempo *st = nullptr;
 
-    vector<MidiEvent*> events = fileInfo->getEvents();
+    std::vector<MidiEvent*> events = fileInfo->getEvents();
     for(unsigned int i=0;i<events.size();i++)
     {
         if(events[i]->getType() == MidiEventType::TIME_SIGNATURE)
@@ -159,7 +142,7 @@ TimeData MidiFile::getTimeData()
     TimeData d;
     d.usPerQuarter = 0;
 
-    if(ts == 0 || st == 0)
+    if(ts == nullptr || st == nullptr)
         return d;
 
 
@@ -174,7 +157,7 @@ TimeData MidiFile::getTimeData()
 int MidiFile::getTickTimeUs(SetTempo* st, TimeSignature* ts)
 {
     int usPerBeat = st->getTempo();
-    int tickPerBeat = header.getDivisions() * ts->getNumerator() / ts->getDenominator();
+    int tickPerBeat = header->getDivisions() * ts->getNumerator() / ts->getDenominator();
     int usPerTick = (usPerBeat / tickPerBeat);
     return usPerTick;
 }
@@ -184,7 +167,7 @@ int MidiFile::getTickTimeUs()
     //http://www.lastrayofhope.co.uk/2009/12/23/midi-delta-time-ticks-to-seconds/
     TimeData d = this->getTimeData();
     int usPerBeat = d.usPerQuarter == 0 ? 500000 : d.usPerQuarter;
-    int tickPerBeat = header.getDivisions() * d.numerator / d.denominator;
+    int tickPerBeat = header->getDivisions() * d.numerator / d.denominator;
     int usPerTick = (usPerBeat / tickPerBeat);
     return usPerTick;
 }

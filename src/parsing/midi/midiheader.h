@@ -9,22 +9,22 @@
 #include "./events/midievent.h"
 #include "../conversion.h"
 
-using namespace std;
-
 class MidiHeader
 {
 public:
     MidiHeader();
-    MidiHeader(vector<unsigned char> data);
 
-    void loadData(vector<unsigned char> data);
-    string toString();
+    void setFormat(int format);
+    void setTrackChunks(int chunks);
+    void setDivisions(int divisions);
+
+    std::string toString();
 
     int getTrackChunks() const;
     int getDivisions() const;
 
 private:
-    string MThd;
+    std::string MThd;
     int headerLength;
     int format;
     int trackChunks;

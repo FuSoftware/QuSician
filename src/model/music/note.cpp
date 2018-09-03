@@ -115,10 +115,8 @@ bool isSharp(int key)
     case 8:
     case 10:
         return true;
-        break;
     default:
         return false;
-        break;
     }
 }
 
