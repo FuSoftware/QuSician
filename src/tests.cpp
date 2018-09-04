@@ -20,7 +20,7 @@ void TestRtMidi()
 
     try
     {
-        midiin = new RtMidiIn(RtMidi::LINUX_ALSA);
+        midiin = new RtMidiIn();
     }
     catch (RtMidiError &error) {
         // Handle the exception here

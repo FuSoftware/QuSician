@@ -204,7 +204,7 @@ MidiHeader *MidiParser::parseHeader(std::vector<unsigned char> data)
     for(int i=0;i<4;i++)
         headerLengthBuffer[i] = data[i+4];
 
-    headerLength = Conversion::toInt(headerLengthBuffer,4);
+    header->setLength(Conversion::toInt(headerLengthBuffer,4));
 
     //Format - 2 bytes
     unsigned char formatBuffer[2];
@@ -253,7 +253,7 @@ MidiFile * MidiParser::parseFile(std::string path)
 
         if(t == nullptr)
         {
-            std::cerr << "Track " << i << " from " << file << " could not be loaded" << std::endl;
+            std::cerr << "Track " << i << " from " << path << " could not be loaded" << std::endl;
         }
         else
         {
@@ -261,7 +261,7 @@ MidiFile * MidiParser::parseFile(std::string path)
         }
 
         i++;
-        remainingBytes.erase(remainingBytes.begin(),remainingBytes.begin()+t->getLength());
+        remainingBytes.erase(remainingBytes.begin(),remainingBytes.begin()+t->getLength()+8);
     }
 
     file->setFileInfo(tracks[i]);

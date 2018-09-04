@@ -17,6 +17,7 @@ public:
     void setFormat(int format);
     void setTrackChunks(int chunks);
     void setDivisions(int divisions);
+    void setLength(int length);
 
     std::string toString();
 
@@ -24,7 +25,6 @@ public:
     int getDivisions() const;
 
 private:
-    std::string MThd;
     int headerLength;
     int format;
     int trackChunks;

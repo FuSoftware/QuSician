@@ -20,7 +20,7 @@ std::string MidiTrack::toString()
 
 int MidiTrack::getLength()
 {
-    return this->length;
+    return this->length; //Track size + header size
 }
 
 void MidiTrack::setLength(int length)

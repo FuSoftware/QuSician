@@ -20,11 +20,16 @@ void MidiHeader::setDivisions(int divisions)
     this->divisions = divisions;
 }
 
+void MidiHeader::setLength(int length)
+{
+    this->headerLength = length;
+}
+
+
 
 std::string MidiHeader::toString()
 {
     std::ostringstream  ss;
-    ss << "Midi header   : " << this->MThd << "\n";
     ss << "Header Length : " << this->headerLength << "\n";
     ss << "Format        : " << this->format << "\n";
     ss << "Track Chunks  : " << this->trackChunks << "\n";
